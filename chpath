@@ -93,22 +93,22 @@ updatePath() {
 # MAIN
 
 # Set bashrc to read .path
-if [[ "$(cat ~/.bashrc | grep 'export PATH="$(cat ~/.path)"')" == "" ]]; then
-  echo 'export PATH="$(cat ~/.path)"' >> ~/.bashrc
+if [[ "$(cat ~/.bashrc | grep 'export PATH="$PATH:$(cat ~/.path)"')" == "" ]]; then
+  echo 'export PATH="$PATH:$(cat ~/.path)"' >> ~/.bashrc
 fi
 
 # Save users original path
 if [ ! -e ~/.pathog ]; then
   echo "Updating .pathog"
   touch ~/.pathog
-  echo -e "$PATH\n" > ~/.pathog
+  echo -e "\~/bin:\n" > ~/.pathog
 fi
 
 # Set .path file if it doesn't exist
 if [ ! -e ~/.path ]; then
   echo "Updating .path"
   touch ~/.path
-  echo -e "$PATH\n" > ~/.path
+  echo -e "\~/bin:\n" > ~/.path
 fi
 
 # Run args
@@ -139,10 +139,10 @@ else
       updatePath
       ;;
     reset ) # Reset to path snapshot taken at installation
-      reset
+      reset $1
       ;;
     list ) # List paths
-      echo "$tmpPath"
+      echo -e "$(echo "$PATH" | tr -s ":" "\n")"
       ;;
     * )
       echo "Subcommand '$cmd' not found"
