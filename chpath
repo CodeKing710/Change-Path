@@ -17,7 +17,10 @@
 ################################################################
 
 # Vars
-tmpPath="`echo -e "$(cat ~/.path | tr -s ":" "\n")\n"`"
+dotpath=$(cat ~/.path)
+#dotpathfr=$(echo "$dotpath" | cut -d '+' -f1)
+#dotpathba=$(echo "$dotpath" | cut -d '+' -f2)
+tmpPath="`echo -e "$(echo "${dotpath}" | tr -s ":" "\n")\n"`"
 cmdList="get\nadd\nedit\nremove\nlist\nreset"
 
 # echo "$tmpPath"
@@ -91,10 +94,17 @@ updatePath() {
 }
 
 # MAIN
+rcContents=$(cat <<-RC
+# CHPATH
+[[ $BAKPATH == "" ]] && BAKPATH="$PATH"
+export BAKPATH
+export PATH="$(cat ~/.path | cut -d '+' -f1):$BAKPATH:$(cat ~/.path | cut -d '+' -f2)"
+RC
+)
 
 # Set bashrc to read .path
-if [[ "$(cat ~/.bashrc | grep 'export PATH="$PATH:$(cat ~/.path)"')" == "" ]]; then
-  echo 'export PATH="$PATH:$(cat ~/.path)"' >> ~/.bashrc
+if [[ $(cat ~/.bashrc | grep '# CHPATH') == "" ]]; then
+  echo "$rcContents" >> ~/.bashrc
 fi
 
 # Save users original path
