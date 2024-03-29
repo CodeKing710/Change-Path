@@ -96,9 +96,9 @@ updatePath() {
 # MAIN
 rcContents=$(cat <<-RC
 # CHPATH
-[[ $BAKPATH == "" ]] && BAKPATH="$PATH"
+[[ \$BAKPATH == "" ]] && BAKPATH="\$PATH"
 export BAKPATH
-export PATH="$(cat ~/.path | cut -d '+' -f1):$BAKPATH:$(cat ~/.path | cut -d '+' -f2)"
+export PATH="\$(cat ~/.path | cut -d '+' -f1):\$BAKPATH:\$(cat ~/.path | cut -d '+' -f2)"
 RC
 )
 
